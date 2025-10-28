@@ -5,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, School, Calendar, BarChart3, UserPlus, BookOpen } from "lucide-react";
 import { toast } from "sonner";
+import CadastrarAluno from "@/components/diretor/CadastrarAluno";
 
 export default function DiretorDashboard() {
   const [stats, setStats] = useState({
@@ -13,6 +14,7 @@ export default function DiretorDashboard() {
     totalTurmas: 0,
     presencasHoje: 0,
   });
+  const [cadastrarAlunoOpen, setCadastrarAlunoOpen] = useState(false);
 
   useEffect(() => {
     loadStats();
@@ -102,7 +104,11 @@ export default function DiretorDashboard() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button className="h-auto py-6 flex-col gap-2" variant="outline">
+                <Button 
+                  className="h-auto py-6 flex-col gap-2" 
+                  variant="outline"
+                  onClick={() => setCadastrarAlunoOpen(true)}
+                >
                   <UserPlus className="w-8 h-8" />
                   <span>Cadastrar Novo Aluno</span>
                 </Button>
@@ -154,6 +160,12 @@ export default function DiretorDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <CadastrarAluno
+        open={cadastrarAlunoOpen}
+        onOpenChange={setCadastrarAlunoOpen}
+        onSuccess={loadStats}
+      />
     </div>
   );
 }
