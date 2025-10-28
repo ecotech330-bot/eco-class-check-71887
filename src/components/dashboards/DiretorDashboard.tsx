@@ -3,9 +3,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
-import { Users, School, Calendar, BarChart3, UserPlus, BookOpen } from "lucide-react";
+import { Users, School, Calendar, BarChart3, UserPlus, BookOpen, Plus } from "lucide-react";
 import { toast } from "sonner";
 import CadastrarAluno from "@/components/diretor/CadastrarAluno";
+import CadastrarProfessor from "@/components/diretor/CadastrarProfessor";
+import CadastrarTurma from "@/components/diretor/CadastrarTurma";
+import ListarAlunos from "@/components/diretor/ListarAlunos";
+import ListarProfessores from "@/components/diretor/ListarProfessores";
+import ListarTurmas from "@/components/diretor/ListarTurmas";
 
 export default function DiretorDashboard() {
   const [stats, setStats] = useState({
@@ -15,6 +20,9 @@ export default function DiretorDashboard() {
     presencasHoje: 0,
   });
   const [cadastrarAlunoOpen, setCadastrarAlunoOpen] = useState(false);
+  const [cadastrarProfessorOpen, setCadastrarProfessorOpen] = useState(false);
+  const [cadastrarTurmaOpen, setCadastrarTurmaOpen] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     loadStats();
@@ -126,36 +134,54 @@ export default function DiretorDashboard() {
 
         <TabsContent value="alunos">
           <Card>
-            <CardHeader>
-              <CardTitle>Gerenciar Alunos</CardTitle>
-              <CardDescription>Lista de todos os alunos cadastrados</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Gerenciar Alunos</CardTitle>
+                <CardDescription>Lista de todos os alunos cadastrados</CardDescription>
+              </div>
+              <Button onClick={() => setCadastrarAlunoOpen(true)} size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Aluno
+              </Button>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Em desenvolvimento...</p>
+              <ListarAlunos key={refreshKey} />
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="professores">
           <Card>
-            <CardHeader>
-              <CardTitle>Gerenciar Professores</CardTitle>
-              <CardDescription>Lista de todos os professores</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Gerenciar Professores</CardTitle>
+                <CardDescription>Lista de todos os professores</CardDescription>
+              </div>
+              <Button onClick={() => setCadastrarProfessorOpen(true)} size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Novo Professor
+              </Button>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Em desenvolvimento...</p>
+              <ListarProfessores key={refreshKey} />
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="turmas">
           <Card>
-            <CardHeader>
-              <CardTitle>Gerenciar Turmas</CardTitle>
-              <CardDescription>Lista de todas as turmas</CardDescription>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <div>
+                <CardTitle>Gerenciar Turmas</CardTitle>
+                <CardDescription>Lista de todas as turmas</CardDescription>
+              </div>
+              <Button onClick={() => setCadastrarTurmaOpen(true)} size="sm">
+                <Plus className="w-4 h-4 mr-2" />
+                Nova Turma
+              </Button>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground">Em desenvolvimento...</p>
+              <ListarTurmas key={refreshKey} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -164,7 +190,28 @@ export default function DiretorDashboard() {
       <CadastrarAluno
         open={cadastrarAlunoOpen}
         onOpenChange={setCadastrarAlunoOpen}
-        onSuccess={loadStats}
+        onSuccess={() => {
+          loadStats();
+          setRefreshKey(prev => prev + 1);
+        }}
+      />
+      
+      <CadastrarProfessor
+        open={cadastrarProfessorOpen}
+        onOpenChange={setCadastrarProfessorOpen}
+        onSuccess={() => {
+          loadStats();
+          setRefreshKey(prev => prev + 1);
+        }}
+      />
+      
+      <CadastrarTurma
+        open={cadastrarTurmaOpen}
+        onOpenChange={setCadastrarTurmaOpen}
+        onSuccess={() => {
+          loadStats();
+          setRefreshKey(prev => prev + 1);
+        }}
       />
     </div>
   );
