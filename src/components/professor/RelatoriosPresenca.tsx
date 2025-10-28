@@ -90,7 +90,7 @@ export default function RelatoriosPresenca() {
     const relatorio: PresencaData[] = alunosData.map(aluno => {
       const presencasAluno = presencasData.filter(p => p.aluno_id === aluno.id);
       const presentes = presencasAluno.filter(p => p.status === "presente").length;
-      const faltas = presencasAluno.filter(p => p.status === "falta").length;
+      const faltas = presencasAluno.filter(p => p.status === "ausente").length;
       const total = presentes + faltas;
       const percentual = total > 0 ? (presentes / total) * 100 : 0;
 

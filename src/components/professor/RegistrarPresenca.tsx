@@ -122,7 +122,7 @@ export default function RegistrarPresenca({ turma, onBack }: RegistrarPresencaPr
       .insert({
         aluno_id: aluno.id,
         registrado_por: user?.id,
-        metodo: "qr_code",
+        metodo: "qr",
         status: "presente",
         data: new Date().toISOString().split('T')[0],
         hora: new Date().toTimeString().split(' ')[0],
@@ -170,7 +170,7 @@ export default function RegistrarPresenca({ turma, onBack }: RegistrarPresencaPr
     const registros = presencasArray.map(alunoId => ({
       aluno_id: alunoId,
       registrado_por: user?.id,
-      metodo: "manual",
+      metodo: "manual" as const,
       status: "presente" as const,
       data: new Date().toISOString().split('T')[0],
       hora: new Date().toTimeString().split(' ')[0],
