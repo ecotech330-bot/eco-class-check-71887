@@ -11,6 +11,7 @@ import CadastrarTurma from "@/components/diretor/CadastrarTurma";
 import ListarAlunos from "@/components/diretor/ListarAlunos";
 import ListarProfessores from "@/components/diretor/ListarProfessores";
 import ListarTurmas from "@/components/diretor/ListarTurmas";
+import RelatoriosDiretor from "@/components/diretor/RelatoriosDiretor";
 
 export default function DiretorDashboard() {
   const [stats, setStats] = useState({
@@ -95,11 +96,12 @@ export default function DiretorDashboard() {
 
       {/* Main Content */}
       <Tabs defaultValue="overview" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
+        <TabsList className="grid w-full grid-cols-5 lg:w-auto">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="alunos">Alunos</TabsTrigger>
           <TabsTrigger value="professores">Professores</TabsTrigger>
           <TabsTrigger value="turmas">Turmas</TabsTrigger>
+          <TabsTrigger value="relatorios">Relatórios</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
@@ -184,6 +186,10 @@ export default function DiretorDashboard() {
               <ListarTurmas key={refreshKey} />
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="relatorios">
+          <RelatoriosDiretor />
         </TabsContent>
       </Tabs>
 

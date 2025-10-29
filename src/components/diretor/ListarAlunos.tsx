@@ -2,13 +2,18 @@ import { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Pencil } from "lucide-react";
+import EditarAluno from "./EditarAluno";
 
 interface Aluno {
   id: string;
   matricula: string;
   foto_url: string | null;
+  usuario_id: string;
+  turma_id: string | null;
   profiles: {
     nome: string;
   };
@@ -21,6 +26,7 @@ interface Aluno {
 export default function ListarAlunos() {
   const [alunos, setAlunos] = useState<Aluno[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editarAluno, setEditarAluno] = useState<Aluno | null>(null);
 
   useEffect(() => {
     loadAlunos();
@@ -34,6 +40,8 @@ export default function ListarAlunos() {
           id,
           matricula,
           foto_url,
+          usuario_id,
+          turma_id,
           profiles!alunos_usuario_id_fkey (nome),
           turmas (nome, ano)
         `)
@@ -62,40 +70,60 @@ export default function ListarAlunos() {
   }
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Foto</TableHead>
-            <TableHead>Nome</TableHead>
-            <TableHead>Matrícula</TableHead>
-            <TableHead>Turma</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {alunos.map((aluno) => (
-            <TableRow key={aluno.id}>
-              <TableCell>
-                <Avatar>
-                  <AvatarImage src={aluno.foto_url || undefined} />
-                  <AvatarFallback>{aluno.profiles?.nome?.charAt(0)}</AvatarFallback>
-                </Avatar>
-              </TableCell>
-              <TableCell className="font-medium">{aluno.profiles?.nome}</TableCell>
-              <TableCell>{aluno.matricula}</TableCell>
-              <TableCell>
-                {aluno.turmas ? (
-                  <Badge variant="secondary">
-                    {aluno.turmas.nome} - {aluno.turmas.ano}
-                  </Badge>
-                ) : (
-                  <span className="text-muted-foreground text-sm">Sem turma</span>
-                )}
-              </TableCell>
+    <>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Foto</TableHead>
+              <TableHead>Nome</TableHead>
+              <TableHead>Matrícula</TableHead>
+              <TableHead>Turma</TableHead>
+              <TableHead className="text-right">Ações</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+          </TableHeader>
+          <TableBody>
+            {alunos.map((aluno) => (
+              <TableRow key={aluno.id}>
+                <TableCell>
+                  <Avatar>
+                    <AvatarImage src={aluno.foto_url || undefined} />
+                    <AvatarFallback>{aluno.profiles?.nome?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </TableCell>
+                <TableCell className="font-medium">{aluno.profiles?.nome}</TableCell>
+                <TableCell>{aluno.matricula}</TableCell>
+                <TableCell>
+                  {aluno.turmas ? (
+                    <Badge variant="secondary">
+                      {aluno.turmas.nome} - {aluno.turmas.ano}
+                    </Badge>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">Sem turma</span>
+                  )}
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEditarAluno(aluno)}
+                  >
+                    <Pencil className="w-4 h-4 mr-2" />
+                    Alterar Turma
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <EditarAluno
+        open={!!editarAluno}
+        onOpenChange={(open) => !open && setEditarAluno(null)}
+        aluno={editarAluno}
+        onSuccess={loadAlunos}
+      />
+    </>
   );
 }
