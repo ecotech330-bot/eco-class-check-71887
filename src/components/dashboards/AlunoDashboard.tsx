@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { QrCode, Calendar, TrendingUp } from "lucide-react";
+import { QrCode, Calendar, TrendingUp, CheckCircle2 } from "lucide-react";
 import QRCode from "qrcode";
+import RegistrarPresencaQR from "@/components/aluno/RegistrarPresencaQR";
 
 export default function AlunoDashboard() {
   const { user } = useAuth();
@@ -71,6 +73,26 @@ export default function AlunoDashboard() {
 
   return (
     <div className="space-y-6">
+      <h1 className="text-3xl font-bold">Minha Área</h1>
+
+      <Tabs defaultValue="presenca" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="presenca" className="gap-2">
+            <CheckCircle2 className="w-4 h-4" />
+            Registrar Presença
+          </TabsTrigger>
+          <TabsTrigger value="estatisticas" className="gap-2">
+            <Calendar className="w-4 h-4" />
+            Estatísticas
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="presenca">
+          <RegistrarPresencaQR />
+        </TabsContent>
+
+        <TabsContent value="estatisticas">
+          <div className="space-y-6">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="bg-gradient-to-br from-success/10 to-success/5 border-success/20">
@@ -187,6 +209,9 @@ export default function AlunoDashboard() {
           )}
         </CardContent>
       </Card>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

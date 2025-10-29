@@ -7,6 +7,7 @@ import { toast } from "sonner";
 interface Professor {
   id: string;
   nome: string;
+  disciplina: string | null;
   turmas: {
     id: string;
     nome: string;
@@ -29,6 +30,7 @@ export default function ListarProfessores() {
         .select(`
           id,
           nome,
+          disciplina,
           turmas (id, nome, ano)
         `)
         .eq("tipo", "professor")
@@ -62,6 +64,7 @@ export default function ListarProfessores() {
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
+            <TableHead>Disciplina</TableHead>
             <TableHead>Turmas</TableHead>
           </TableRow>
         </TableHeader>
@@ -69,6 +72,13 @@ export default function ListarProfessores() {
           {professores.map((prof) => (
             <TableRow key={prof.id}>
               <TableCell className="font-medium">{prof.nome}</TableCell>
+              <TableCell>
+                {prof.disciplina ? (
+                  <Badge variant="outline">{prof.disciplina}</Badge>
+                ) : (
+                  <span className="text-muted-foreground text-sm">Não informada</span>
+                )}
+              </TableCell>
               <TableCell>
                 {prof.turmas && prof.turmas.length > 0 ? (
                   <div className="flex flex-wrap gap-1">

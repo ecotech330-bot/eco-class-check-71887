@@ -24,6 +24,7 @@ export default function CadastrarProfessor({ open, onOpenChange, onSuccess }: Ca
       const nome = formData.get("nome") as string;
       const email = formData.get("email") as string;
       const senha = formData.get("senha") as string;
+      const disciplina = formData.get("disciplina") as string;
 
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
@@ -32,6 +33,7 @@ export default function CadastrarProfessor({ open, onOpenChange, onSuccess }: Ca
           data: {
             nome,
             tipo: "professor",
+            disciplina,
           },
         },
       });
@@ -89,6 +91,17 @@ export default function CadastrarProfessor({ open, onOpenChange, onSuccess }: Ca
               placeholder="Mínimo 6 caracteres"
               required
               minLength={6}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="disciplina">Disciplina/Matéria *</Label>
+            <Input
+              id="disciplina"
+              name="disciplina"
+              type="text"
+              placeholder="Ex: Matemática, Português, etc."
+              required
             />
           </div>
 
